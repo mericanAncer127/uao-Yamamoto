@@ -1,10 +1,10 @@
-FROM node:16-alpine as build
+FROM node:16.20.2 as build
 
 WORKDIR /usr/local/share/frontend
 
 COPY package*.json ./
 RUN apk --update add libtool automake autoconf nasm gcc make g++ zlib-dev
-RUN npm install
+RUN npm install --force
 COPY . .
 RUN npm run build
 
