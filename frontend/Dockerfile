@@ -1,16 +1,20 @@
-FROM node:16.20.2 as build
+# Use the official Node.js image as the base image
+FROM node:16.20.2
 
-WORKDIR /usr/local/share/frontend
+# Set the working directory inside the container
+WORKDIR /app/frontend
 
+# Copy package.json and package-lock.json to the container
 COPY package*.json ./
-RUN apk --update add libtool automake autoconf nasm gcc make g++ zlib-dev
+
+# Install dependencies
 RUN npm install --force
+
+# Copy the rest of the application code
 COPY . .
-RUN npm run build
 
-FROM danjellz/http-server:1.2
-
-ENV PORT=8080
+# Expose port 3000 (the port your frontend server runs on)
 EXPOSE 8080
 
-COPY --from=build /usr/local/share/frontend/public .
+# Start the frontend server
+CMD ["npm", "start"]

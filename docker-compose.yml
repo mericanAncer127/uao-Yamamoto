@@ -1,31 +1,25 @@
-version: '3.8'
-
+version: '3'
 services:
   backend:
-    build:
-      context: ./backend
-    ports:
-      - "5000:5000"
+    image: node:16.20.2
+    container_name: my-mern-backend
+    working_dir: /app/backend
+    volumes:
+      - ./backend:/app/backend
     environment:
-      - MONGO_URL=mongodb://db:27017/uao_Yamamoto
-    depends_on:
-      - db
+      - MONGODB_URI=mongodb://host.docker.internal:27017/uao_Yamamoto
+    ports:
+      - "5000:5000"  # Expose backend API on port 5000
+    command: npm start
 
   frontend:
-    build:
-      context: ./frontend
-    ports:
-      - "8080:8080"
-    environment:
-      - REACT_APP_API_URL=http://localhost:5000/api/event
-
-  db:
-    image: mongo
+    image: node:16.20.2
+    container_name: my-mern-frontend
+    working_dir: /app/frontend
     volumes:
-      - ./db/data:/data/db
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=
-      - MONGO_INITDB_ROOT_PASSWORD=
-      - MONGO_INITDB_DATABASE=uao_Yamamoto
+      - ./frontend:/app/frontend
     ports:
-      - "27017:27017"
+      - "8080:3000"  # Expose frontend on port 8080
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000/api/  # Set frontend API URL
+    command: npm start
