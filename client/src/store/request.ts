@@ -10,7 +10,7 @@ export interface BaseEvent {
 }
 
 // Base URL of your API
-const baseURL = "http://localhost:5000/api/event";
+const baseURL = "http://localhost:8081/api/event";
 
 // Function to create a new event
 export const sendCreateEventRequest = async (
