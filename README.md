@@ -1,47 +1,88 @@
-# Code Challenge
+# :rocket: MERN authentication with email verification, hooks and docker (prod/dev).
 
-Before starting, the candidate should have received a personal code from a UAO! recruiter.
+![capture du 2018-12-16 13-57-42](https://user-images.githubusercontent.com/40322270/50053751-aa653080-013a-11e9-9a8d-35a55c9042f1.png)
 
-## Tech Stack
+:video_game: Demo: <https://mern-auth-client.herokuapp.com/login>
 
-Build a sample web application using the following tech stack:
+:warning: Demo code is outdated, had to replace with unstyled version for now. CSS styles, Google Captcha, Sentry usage and some other not essential dependencies like notifications are only in the demo. This repository aim to have a fast to use boilerplate.
 
-- NodeJs
-- ReactJs
-- Typescript
-- MongoDB
-  User Experience
-  Provide users with a calendar. Users must be able to select a date range and set up an event containing two fields:
-  Description  
-  Price
-  Users must be able to save, edit, and remove events.
+## :star: The project if it helped you!
 
-[Optional] Event search: Users can select a date range, the search must return all events within the date range
+# :whale: Docker
 
-## Backend
+Boilerplate now is fully usable with docker, it integrate the MongoDB database, the React/Redux frontend and NodeJS/Express backend.
 
-Events must be handled as MongoDB documents in a collection.
+If you do not have docker: <https://docs.docker.com/get-docker/>
 
-## Packaging
+Docker allows to deloy the app in docker containers in one line in the CLI.
 
-The web application must be dockerized.
+## Environment variables
 
-## Acceptance Criteria
+You have to set the following environment variables in `server.dev.env` file (rename server.example.env to server.dev.env):
 
-- Your code repository is a private GitHub repository forked from `git@github.com:uao-outstanding-workplace/code-challenge.git`
-- The cloned project must be named `uao-<PERSONAL_CODE>`, where `<PERSONAL_CODE>` is provided by a UAO! recruiter
-- Invite UAO! Outstanding Workplace as a project contributor
+- SENDGRID_API_KEY, the backend uses Send Grid to send emails, you can register and get a free key on their website: <https://sendgrid.com/>. :warning: You cannot use the app without a key. Validation links are sent in http not https, you can modified that in server/routes/auth.js if you want to go https in deployment.
 
-Once received your project invitation from GitHub:
+- SESSION_KEY, it is the secret key that is used to compute the hash of sessions. It is important to use a strong key: <https://cloud.google.com/network-connectivity/docs/vpn/how-to/generating-pre-shared-key>.
 
-- We will clone the GitHub project from the last commit before the due date
-- We will run `docker-compose up` from the root folder of the project
-- We will evaluate:
-  - User Experience
-  - Software Design: SOLID principles, TDD, Software Engineering
-  - Data Model
-  - Optional features
+- SENDING_EMAIL, the email address you want to use to send confirmation email to the user.
 
-The web application must be available at the address: `http://localhost:8080/webapp`
+## Development
 
-Good luck! We wish to meet you soon.
+in the root directory:
+
+`docker compose up --build`
+
+It supports hot reloading for both the frontend and backend.
+
+## Production
+
+Set `server.prod.env` and `client.prod.env` files.
+
+Note: `server.prod.env` is used at runtime and can be defined in docker-compose directly, `client.prod.env` is used at docker image build time, to do so we define env for the docker-compose parser through `--env-file` then pass the envs to docker build through arguments.
+
+in the root directory:
+
+`docker compose -f docker-compose.prod.yml --env-file client.prod.env up --build`
+
+Frontend app uses an Nginx server to deliver static files.
+
+You may want to use the flag `--remove-orphans`
+
+To deploy on Heroku refer to their documentation:
+<https://devcenter.heroku.com/categories/deploying-with-docker>
+
+## :computer: Boilerplate
+
+MERN Stack with advanced authentication :
+
+- Email verification (Token Based) with resend/reset option, Login with forgot password feature.
+
+- Server side sessions.
+
+- Docker for development and production with hot reloading.
+
+- Mongodb.
+
+- Express.
+
+- React/Redux based on Create React App.
+
+- React Hooks.
+
+- Nodejs.
+
+- Typescript.
+
+- Passport-js local.
+
+- Sendgrid API for emails.
+
+## :lock: Security
+
+This repository is scanned with snyk and code scanning from github for vulnerabilities. Do not use this code blindly, audit it first.
+
+## :information_source: How to ?
+
+- Use emails for authentication instead of usernames: <https://github.com/flaviuse/mern-authentication/issues/7>
+
+- I added a dependency but my docker container does not found it: <https://medium.com/@semur.nabiev/how-to-make-docker-compose-volumes-ignore-the-node-modules-directory-99f9ec224561> (either install the dependency in the container with the cli or reset the volume).
